@@ -1,0 +1,13 @@
+---
+title: "Rural and Urban Census Data"
+author: "Madison Yonash"
+date: "2023-09-27"
+output: html_notebook
+---
+
+```{r}
+data <- read.table(file = "", 
+                   sep = "|",
+                   header = T)
+```
+
