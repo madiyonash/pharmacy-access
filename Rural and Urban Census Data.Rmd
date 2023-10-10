@@ -13,7 +13,8 @@ library(tidyverse)
 ```{r}
 data <- read.table(file = "C:/Users/madis/Documents/pharmacy-misc/Urban Census Data.txt", 
                    sep = "|",
-                   header = T)
+                   header = T,
+                   colClasses = "character")
 ```
 
 ```{r}
@@ -45,12 +46,49 @@ santaclara <- cageo %>%
          'Population' = 'V91'
          ) %>% 
   transform(Population = as.numeric(Population)) %>% 
-  #mutate(csum = cumsum(Population)) %>% 
   unite(GeoID, c('StateCode', 'CountyCode', 'CTCode'), sep = "", remove = FALSE)
+santaclara$GeoID <- substr(santaclara$GeoID, 0, 9)
 santaclara
 ```
 
-```{r}
 
+```{r}
+totalPop <- santaclara %>% 
+  group_by(GeoID) %>% 
+  summarize(Population = sum(Population))
+totalPop
+```
+
+
+```{r}
+data$GEOID <- substr(data$GEOID, 0, 9)
+glimpse(data)
+```
+
+```{r}
+data <- data%>% 
+  transform(X2020_POP = as.numeric(X2020_POP))
+```
+```{r}
+urbanCT <- data  %>% 
+  aggregate(X2020_POP~GEOID, FUN=sum) %>% 
+  rename('GeoID' = 'GEOID',
+         'UrbanPop' = 'X2020_POP'
+         )
+urbanCT
+```
+
+
+```{r}
+mergedDF <- merge(x = totalPop, y = urbanCT, by = "GeoID", all.x=T)
+mergedDF
+```
+
+```{r}
+for (i in 1:nrow(mergedDF)) {
+   mergedDF$urbanPercent[i] <- mergedDF$UrbanPop[i] / mergedDF$Population[i]
+}
+
+mergedDF
 ```
 
