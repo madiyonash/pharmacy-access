@@ -6,8 +6,51 @@ output: html_notebook
 ---
 
 ```{r}
-data <- read.table(file = "", 
+library(tidyverse)
+```
+
+
+```{r}
+data <- read.table(file = "C:/Users/madis/Documents/pharmacy-misc/Urban Census Data.txt", 
                    sep = "|",
                    header = T)
+```
+
+```{r}
+glimpse(data)
+```
+
+```{r}
+cageo <- read.table("C:/Users/madis/Documents/pharmacy-misc/cageo2020.pl",
+                    sep = "|",
+                    header = F,
+                    fill = T,
+                    colClasses = "character"
+                    )
+```
+
+```{r}
+glimpse(cageo)
+```
+
+
+```{r}
+santaclara <- cageo %>% 
+  filter(V95 == "CT") %>% 
+  select('V2', 'V13', 'V15', 'V87', 'V91') %>% 
+  rename('State' = 'V2',
+         'StateCode' = 'V13',
+         'CountyCode' = 'V15',
+         'CTCode' = 'V87',
+         'Population' = 'V91'
+         ) %>% 
+  transform(Population = as.numeric(Population)) %>% 
+  #mutate(csum = cumsum(Population)) %>% 
+  unite(GeoID, c('StateCode', 'CountyCode', 'CTCode'), sep = "", remove = FALSE)
+santaclara
+```
+
+```{r}
+
 ```
 
