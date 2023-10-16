@@ -91,4 +91,34 @@ for (i in 1:nrow(mergedDF)) {
 
 mergedDF
 ```
+```{r}
+cageo %>% 
+  filter()
+```
+
+
+
+```{r}
+testdata <- data %>% 
+  filter(STATE == "06",
+         COUNTY == "085",
+         TRACT == "512100"
+           )
+
+sum(testdata$X2020_POP) 
+```
+
+```{r}
+testcageo <- cageo %>% 
+  filter(V13 == "06",
+         V15 == "085",
+         V87 == "5121",
+         V95 == "CT") %>% 
+  transform(V91 = as.numeric(V91)) %>% 
+  select('V2', 'V13', 'V15', 'V87', 'V91')
+sum(testcageo$V91)
+```
+```{r}
+
+```
 
