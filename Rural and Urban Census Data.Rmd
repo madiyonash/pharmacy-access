@@ -12,7 +12,7 @@ library(tidyverse)
 
 ```{r}
 #Getting data from the urban census tracts
-urban <- read.table(file = "C:/Users/madis/Documents/pharmacy-misc/Urban Census Data.txt", 
+urbandata <- read.table(file = "C:/Users/madis/Documents/pharmacy-misc/Urban Census Data.txt", 
                    sep = "|",
                    header = T,
                    colClasses = "character")
@@ -30,16 +30,15 @@ censusdata <- read.table("C:/Users/madis/Documents/pharmacy-misc/cageo2020.pl",
 
 ```{r}
 #Filtering the urban dataset by California
-urban <- urban %>% 
+urbandata <- urbandata %>% 
   filter(STATE == "06")
 ```
 
 ```{r}
 #Select relevant variables
-urban <- urban %>% 
+urban <- urbandata %>% 
   select(STATE, COUNTY, TRACT, X2020_POP) %>% 
   transform(X2020_POP = as.numeric(X2020_POP))
-urban
 ```
 
 ```{r}
@@ -52,7 +51,6 @@ urban <- urban %>%
   group_by(GEOID) %>% 
   mutate(URBAN_POP = sum(X2020_POP))  %>% 
   select(-X2020_POP) 
-urban
 ```
 
 ```{r}
@@ -71,9 +69,6 @@ censusdata %>%
 
 ```
 
-
-
-
 ```{r}
 #Perform same functions to the census data
 cacensus <- censusdata %>%  
@@ -91,7 +86,9 @@ cacensus <- censusdata %>%
   unite(GEOID, c('STATE', 'COUNTY', 'TRACT'), sep = "", remove = FALSE)
 cacensus$GEOID <- substr(cacensus$GEOID, 0, 9)
 cacensus$TRACT <- substr(cacensus$TRACT, 0, 4)
-cacensus
+cacensus %>% 
+  filter(GEOID == "060014001")
+  
 ```
 
 ```{r}
@@ -110,21 +107,29 @@ cacensus <- cacensus %>%
 cacensus
 ```
 
-```{r}
-
-```
 
 
 ```{r}
 #Merge by GEOID
-mergedDF <- merge(x = cacensus, y = urban, by = "GEOID", all.x=T)
-mergedDF
+mergedDF <- merge(x = cacensus, y = urban, by = "GEOID")
+mergedDF %>% 
+  select(GEOID, URBAN_POP, TRACT_POP)
 ```
 
 ```{r}
+#Find percentage of population that is urban
 for (i in 1:nrow(mergedDF)) {
    mergedDF$urbanPercent[i] <- mergedDF$URBAN_POP[i] / mergedDF$TRACT_POP[i]
 }
 mergedDF %>% 
   select(GEOID, urbanPercent, URBAN_POP, TRACT_POP)
 ```
+
+```{r}
+#Test case
+cacensus %>% 
+  filter(GEOID == "060014001")
+urban %>% 
+  filter(GEOID == "060014001")
+```
+
