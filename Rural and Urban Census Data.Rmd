@@ -109,6 +109,12 @@ mergedDF %>%
 for (i in 1:nrow(mergedDF)) {
    mergedDF$urbanPercent[i] <- mergedDF$URBAN_POP[i] / mergedDF$TRACT_POP[i]
 }
-mergedDF %>% 
+mergedDFselect <- mergedDF%>%
   select(GEOID, urbanPercent, URBAN_POP, TRACT_POP)
 ```
+cd
+```{r}
+#Export to CSV
+write.csv(mergedDFselect, "C:/Users/madis/Documents/pharmacy-misc/pharmacy-access/Urban-Rural.csv", row.names=FALSE)
+```
+
