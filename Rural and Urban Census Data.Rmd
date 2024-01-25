@@ -115,6 +115,6 @@ mergedDFselect <- mergedDF%>%
 cd
 ```{r}
 #Export to CSV
-write.csv(mergedDFselect, "C:/Users/madis/Documents/pharmacy-misc/pharmacy-access/Urban-Rural.csv", row.names=FALSE)
+write.csv(mergedDFselect, "C:/Users/madis/Documents/pharmacy-misc/pharmacy-access/Urban-Rural-FL.csv", row.names=FALSE)
 ```
 
